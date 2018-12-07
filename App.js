@@ -5,11 +5,11 @@ import {
   createAppContainer,
   createDrawerNavigator
 } from 'react-navigation';
-import * as Expo from 'expo';
 import { Drawer } from 'native-base';
-import ProfileScreen from './components/ProfileScreen';
 import MapScreen from './components/MapScreen';
 import Sidebar from './components/Sidebar';
+import LogoutScreen from './components/LogoutScreen';
+import InboxScreen from './components/InboxScreen';
 
 class HomeScreen extends Component {
   closeDrawer = () => {
@@ -17,6 +17,9 @@ class HomeScreen extends Component {
   };
   openDrawer = () => {
     this.drawer._root.open();
+  };
+  allNav = screen => {
+    this.props.navigation.navigate(screen);
   };
   render() {
     return (
@@ -26,11 +29,17 @@ class HomeScreen extends Component {
             this.drawer = ref;
           }}
           content={
-            <Sidebar navigator={this.navigator} onPress={this.closeDrawer} />
+            <Sidebar
+              navigator={this.navigator}
+              allNav={this.allNav}
+              onPress={this.closeDrawer}
+            />
           }
           onClose={() => this.closeDrawer()}
         >
-          <Text onPress={() => this.openDrawer()}>Hello</Text>
+          <Button title="menu" onPress={() => this.openDrawer()}>
+            Menu
+          </Button>
         </Drawer>
         <View
           style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}
@@ -59,8 +68,11 @@ const AppNavigator = createStackNavigator(
     Map: {
       screen: MapScreen
     },
-    Profile: {
-      screen: ProfileScreen
+    Inbox: {
+      screen: InboxScreen
+    },
+    Logout: {
+      screen: LogoutScreen
     }
   },
   {

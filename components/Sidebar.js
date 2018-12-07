@@ -11,12 +11,9 @@ class Sidebar extends Component {
     return (
       <View>
         <Text>Sidebar</Text>
-        <Button
-          title="Map"
-          onPress={() => this.props.navigation.navigate('Map')}
-        />
-        <Text>Even More Text</Text>
-        <Text>More Text</Text>
+        <Button title="Map" onPress={() => this.props.allNav('Map')} />
+        <Button title="Inbox" onPress={() => this.props.allNav('Inbox')} />
+        <Button title="Logout" onPress={() => this.props.allNav('Logout')} />
       </View>
     );
   }
