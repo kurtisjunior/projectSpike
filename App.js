@@ -1,8 +1,19 @@
-import React from "react";
-import { Button, View, Text } from "react-native";
+import React, { Component } from "react";
+import { Button, View, Text, StyleSheet, TextInput } from "react-native";
 import { createStackNavigator, createAppContainer } from "react-navigation";
 
-class HomeScreen extends React.Component {
+import Expo from "expo";
+
+const styles = StyleSheet.create({
+  allScreens: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+    fontSize: 20
+  }
+});
+
+class HomeScreen extends Component {
   render() {
     return (
       <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
@@ -21,24 +32,41 @@ class HomeScreen extends React.Component {
   }
 }
 
-class MapScreen extends React.Component {
+class MapScreen extends Component {
+  getLocation = async () => {
+    let { status } = await Expo.Permissions.askAsync(Expo.Permissions.LOCATION);
+    if (status !== "granted") {
+      console.log("Location not granted");
+      return;
+    }
+    let location = await Expo.Location.getCurrentPositionAsync({});
+    console.log(location);
+  };
+
   render() {
     return (
-      <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-        <Text>Map Screen</Text>
-        <Button
-          title="Home"
-          onPress={() => this.props.navigation.navigate("Home")}
-        />
-      </View>
+      <Expo.MapView
+        style={{ flex: 1 }}
+        provider={Expo.MapView.PROVIDER_GOOGLE}
+        initialRegion={{
+          latitude: 37.78825,
+          longitude: -122.4324,
+          latitudeDelta: 0.0922,
+          longitudeDelta: 0.0421
+        }}
+      />
     );
+  }
+
+  componentDidMount() {
+    this.getLocation();
   }
 }
 
-class ProfileScreen extends React.Component {
+class ProfileScreen extends Component {
   render() {
     return (
-      <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+      <View style={styles.allScreens}>
         <Text>Profile Screen</Text>
         <Button
           title="Home"
