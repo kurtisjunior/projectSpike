@@ -45,7 +45,7 @@ class HomeScreen extends Component {
           style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}
         >
           <Text>Home Screen</Text>
-          <Button
+          {/* <Button
             title="Map"
             onPress={() => this.props.navigation.navigate('Map')}
           />
@@ -53,7 +53,7 @@ class HomeScreen extends Component {
             title="Profile"
             //we call the navigate function (on the navigation prop) with the name of the route that we'd like to move the user to.
             onPress={() => this.props.navigation.navigate('Profile')}
-          />
+          /> */}
         </View>
       </>
     );

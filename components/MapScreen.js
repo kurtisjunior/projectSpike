@@ -1,47 +1,70 @@
 import React, { Component } from 'react';
-import { Button, View, Text } from 'react-native';
-import {
-  createStackNavigator,
-  createAppContainer,
-  createDrawerNavigator
-} from 'react-navigation';
+import { Button, View, Text, StyleSheet, TextInput } from 'react-native';
+import { createStackNavigator, createAppContainer } from 'react-navigation';
 import * as Expo from 'expo';
-
-class MapScreen extends Component {
+export default class App extends Component {
   state = {
-    location: null
+    location: null,
+    oldTrafford: null,
+    Arsenal: null,
+    where: null
   };
-  getLocation = async () => {
-    console.log('working!');
+  getlocation = async () => {
     let { status } = await Expo.Permissions.askAsync(Expo.Permissions.LOCATION);
-    console.log('status', status);
     if (status !== 'granted') {
-      console.log('Location not granted');
-    } else {
-      console.log('location prior');
-      let location = await Expo.Location.getCurrentPositionAsync({});
-      console.log('LOCATION', location);
-      this.setState({
-        location: location
-      });
+      console.error('Location denied');
+      return;
     }
+    let location = await Expo.Location.getCurrentPositionAsync({});
+    let oldTrafford = (await Expo.Location.geocodeAsync(
+      'Sir Matt Busby Way'
+    ))[0];
+    let Arsenal = (await Expo.Location.geocodeAsync(
+      ' Hornsey Rd, London N7 7AJ'
+    ))[0];
+    let where = (await Expo.Location.reverseGeocodeAsync(location.coords))[0];
+    this.setState({
+      location: location,
+      oldTrafford: oldTrafford,
+      Arsenal: Arsenal,
+      where: where
+    });
   };
-
   render() {
-    console.log('HERE! - location', this.state.location);
+    if (!this.state.location) {
+      return <View />;
+    }
     return (
-      <>
-        <Expo.MapView
-          style={{ flex: 1 }}
-          provider={Expo.MapView.PROVIDER_GOOGLE}
+      <Expo.MapView
+        style={{ flex: 1 }}
+        provider={Expo.MapView.PROVIDER_GOOGLE}
+        initialRegion={{
+          latitude: this.state.location.coords.latitude,
+          longitude: this.state.location.coords.longitude,
+          latitudeDelta: 0.01,
+          longitudeDelta: 0.01
+        }}
+      >
+        <Expo.MapView.Marker
+          coordinate={this.state.location.coords}
+          title="you are here: "
+          description={this.state.where.name}
+          pinColor="blue"
         />
-      </>
+        <Expo.MapView.Marker
+          coordinate={this.state.oldTrafford}
+          title="theatre of garbage"
+          pinColor="red"
+        />
+        <Expo.MapView.Marker
+          coordinate={this.state.Arsenal}
+          title="theatre of invicibles"
+          pinColor="gold"
+        />
+      </Expo.MapView>
     );
   }
-
   componentDidMount() {
-    this.getLocation();
+    this.getlocation();
   }
 }
-
-export default MapScreen;
