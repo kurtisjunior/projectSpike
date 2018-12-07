@@ -1,14 +1,15 @@
-import React, { Component } from "react";
-import { Button, View, Text, StyleSheet, TextInput } from "react-native";
-import { createStackNavigator, createAppContainer } from "react-navigation";
+import React, { Component } from 'react';
+import { Button, View, Text, StyleSheet, TextInput } from 'react-native';
+import { createStackNavigator, createAppContainer } from 'react-navigation';
+// import Drawer from 'react-native-drawer';
 
-import Expo from "expo";
+import Expo from 'expo';
 
 const styles = StyleSheet.create({
   allScreens: {
     flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
+    alignItems: 'center',
+    justifyContent: 'center',
     fontSize: 20
   }
 });
@@ -16,17 +17,18 @@ const styles = StyleSheet.create({
 class HomeScreen extends Component {
   render() {
     return (
-      <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
         <Text>Home Screen</Text>
         <Button
           title="Map"
-          onPress={() => this.props.navigation.navigate("Map")}
+          onPress={() => this.props.navigation.navigate('Map')}
         />
         <Button
           title="Profile"
           //we call the navigate function (on the navigation prop) with the name of the route that we'd like to move the user to.
-          onPress={() => this.props.navigation.navigate("Profile")}
+          onPress={() => this.props.navigation.navigate('Profile')}
         />
+        <Button title="Tab Navigation" onPress={this.onButtonPress} />
       </View>
     );
   }
@@ -35,8 +37,8 @@ class HomeScreen extends Component {
 class MapScreen extends Component {
   getLocation = async () => {
     let { status } = await Expo.Permissions.askAsync(Expo.Permissions.LOCATION);
-    if (status !== "granted") {
-      console.log("Location not granted");
+    if (status !== 'granted') {
+      console.log('Location not granted');
       return;
     }
     let location = await Expo.Location.getCurrentPositionAsync({});
@@ -70,7 +72,7 @@ class ProfileScreen extends Component {
         <Text>Profile Screen</Text>
         <Button
           title="Home"
-          onPress={() => this.props.navigation.navigate("Home")}
+          onPress={() => this.props.navigation.navigate('Home')}
         />
       </View>
     );
@@ -92,15 +94,30 @@ const AppNavigator = createStackNavigator(
     }
   },
   {
-    initialRouteName: "Home"
+    initialRouteName: 'Home'
   }
 );
+
+const ControlPanel = props => {
+  return <Text>Hiya!</Text>;
+};
 
 const AppContainer = createAppContainer(AppNavigator);
 
 export default class App extends React.Component {
+  closeControlPanel = () => {
+    this._drawer.close();
+  };
+  openControlPanel = () => {
+    this._drawer.open();
+  };
   render() {
     return <AppContainer />;
+    {
+      /* <Drawer ref={ref => (this._drawer = ref)} content={<ControlPanel />}>
+        <MyMainView />
+      </Drawer> */
+    }
   }
 }
 
