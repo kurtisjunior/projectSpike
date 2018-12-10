@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
-import { Button, View, Text } from 'react-native';
+import { View, Text } from 'react-native';
 import {
   createStackNavigator,
   createAppContainer,
   createDrawerNavigator
+  // DrawerNavigator
 } from 'react-navigation';
-import { Drawer } from 'native-base';
+import { Drawer, Thumbnail, Button, Icon } from 'native-base';
 import MapScreen from './components/MapScreen';
 import Sidebar from './components/Sidebar';
 import LogoutScreen from './components/LogoutScreen';
@@ -18,42 +19,67 @@ class HomeScreen extends Component {
   openDrawer = () => {
     this.drawer._root.open();
   };
+  toggleDrawer = () => {
+    this.drawer._root.toggle();
+  };
   allNav = screen => {
     this.props.navigation.navigate(screen);
   };
   render() {
+    const drawerStyles = {
+      drawer: {
+        // shadowColor: '#000000',
+        // shadowOpacity: 0.8,
+        // shadowRadius: 3,
+        // opacity: 0,
+        backgroundColor: 'transparent',
+        height: 100
+      },
+      main: {
+        paddingLeft: 3,
+        backgroundColor: 'transparent'
+      },
+      drawerOverlay: { opacity: 0, backgroundColor: 'transparent' },
+      mainOverlay: { opacity: 0, backgroundColor: 'transparent' }
+    };
+    //Check here for styles: https://github.com/root-two/react-native-drawer
     return (
       <>
-        <Drawer
-          ref={ref => {
-            this.drawer = ref;
-          }}
-          content={
-            <Sidebar
-              navigator={this.navigator}
-              allNav={this.allNav}
-              onPress={this.closeDrawer}
-            />
-          }
-          onClose={() => this.closeDrawer()}
-        >
-          <Button title="menu" onPress={() => this.openDrawer()}>
-            Menu
-          </Button>
-        </Drawer>
         <View
-          style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}
+          style={{
+            flex: 1,
+            backgroundColor: 'red'
+          }}
         >
-          <Text>Home Screen</Text>
-          {/* <Button
-            title="Map"
-            onPress={() => this.props.navigation.navigate('Map')}
-          />
-          <Button
-            title="Profile"
-            //we call the navigate function (on the navigation prop) with the name of the route that we'd like to move the user to.
-            onPress={() => this.props.navigation.navigate('Profile')}
-          /> */}
+          <Drawer
+            type="overlay"
+            // openDrawerOffset={0.25}
+            styles={drawerStyles}
+            side="top"
+            // tweenHandler={Drawer.tweenPresets.parallax}
+            ref={ref => {
+              this.drawer = ref;
+            }}
+            content={
+              <Sidebar
+                navigator={this.navigator}
+                allNav={this.allNav}
+                onPress={this.closeDrawer}
+                closer={this.closeDrawer}
+              />
+            }
+            onClose={() => this.closeDrawer()}
+          >
+            <Button
+              iconLeft
+              transparent
+              onPress={() => this.toggleDrawer()}
+              width={50}
+            >
+              <Icon type="FontAwesome" name="bars" />
+            </Button>
+            <Text>Home Screen</Text>
+          </Drawer>
         </View>
       </>
     );
